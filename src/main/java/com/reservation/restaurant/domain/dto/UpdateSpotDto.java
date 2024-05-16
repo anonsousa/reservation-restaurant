@@ -1,9 +1,12 @@
-package com.reservation.restaurant.domain.spots;
+package com.reservation.restaurant.domain.dto;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Positive;
 
-public record AddSpotDto(
+public record UpdateSpotDto(
+
+        @NotBlank(message = "Id cant be blank")
+        Long idTable,
 
         @Positive(message = "Only positive numbers for capacity!")
         Integer capacity,

@@ -1,5 +1,6 @@
-package com.reservation.restaurant.domain.spots;
+package com.reservation.restaurant.domain.dto;
 
+import com.reservation.restaurant.domain.models.SpotModel;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Positive;
 
