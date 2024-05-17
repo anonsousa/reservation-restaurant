@@ -1,5 +1,7 @@
 package com.reservation.restaurant.domain.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
@@ -26,6 +28,7 @@ public class SpotModel implements Serializable {
     private String description;
 
     @OneToMany(mappedBy = "spot", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
     private List<ReserveModel> reserves;
 
 

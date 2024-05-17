@@ -8,6 +8,7 @@ import com.reservation.restaurant.domain.repositories.ReserveRepository;
 import com.reservation.restaurant.domain.repositories.SpotRepository;
 import com.reservation.restaurant.domain.validations.ReserveValidation;
 import com.reservation.restaurant.infra.InvalidReserveException;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -25,7 +26,8 @@ public class ReserveService {
     @Autowired
     private ReserveValidation reserveValidation;
 
-    private ShowReserveDto save(AddReserveDto addReserveDto){
+    @Transactional
+    public ShowReserveDto save(AddReserveDto addReserveDto){
         ReserveModel reserveModel = new ReserveModel();
         BeanUtils.copyProperties(addReserveDto, reserveModel);
         reserveValidation.validateReserveDate(addReserveDto.reserveEffectiveDate());

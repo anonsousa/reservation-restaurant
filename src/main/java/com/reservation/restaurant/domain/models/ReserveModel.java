@@ -1,5 +1,6 @@
 package com.reservation.restaurant.domain.models;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
@@ -21,6 +22,7 @@ public class ReserveModel {
 
     @ManyToOne
     @JoinColumn(name = "spot_id", nullable = false)
+    @JsonBackReference
     private SpotModel spot;
 
     @Column(name = "reserve_owner", nullable = false)

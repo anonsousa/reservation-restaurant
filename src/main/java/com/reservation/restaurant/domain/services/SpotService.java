@@ -42,6 +42,7 @@ public class SpotService {
         return spotModelPage.map(ShowSpotDto::new);
     }
 
+    @Transactional
     public ShowSpotDto update(UpdateSpotDto updateSpotDto){
         Optional<SpotModel> spotModelOptional = spotRepository.findById(updateSpotDto.idTable());
         if (spotModelOptional.isPresent()){
@@ -53,6 +54,7 @@ public class SpotService {
         }
     }
 
+    @Transactional
     public void deleteById(Long id){
         Optional<SpotModel> spotModelOptional = spotRepository.findById(id);
         if (spotModelOptional.isPresent()){
