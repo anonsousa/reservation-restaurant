@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
+import java.util.List;
 
 @Entity
 @Table(name = "tbl_spots")
@@ -18,9 +19,14 @@ public class SpotModel implements Serializable {
     @Column(name = "id_table")
     private Long idTable;
 
+    @Column(nullable = false)
     private Integer capacity;
 
+    @Column(columnDefinition = "TEXT")
     private String description;
+
+    @OneToMany(mappedBy = "spot", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ReserveModel> reserves;
 
 
     public Long getIdTable() {
@@ -45,5 +51,13 @@ public class SpotModel implements Serializable {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public List<ReserveModel> getReserves() {
+        return reserves;
+    }
+
+    public void setReserves(List<ReserveModel> reserves) {
+        this.reserves = reserves;
     }
 }
