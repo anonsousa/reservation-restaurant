@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -34,15 +35,19 @@ public class ReserveService {
         ReserveModel reserveModel = new ReserveModel();
         BeanUtils.copyProperties(addReserveDto, reserveModel);
 
-        reserveValidation.validateReserveDate(addReserveDto.reserveEffectiveDate());
+        reserveValidation.validateReserveDate(addReserveDto.reserveEffectiveDateStart());
 
-        List<SpotModel> findReserve = reserveValidation.findAvailableSpots(addReserveDto.peopleNumber(), addReserveDto.reserveEffectiveDate());
+        LocalDateTime reserveEffectiveDateEnd = addReserveDto.reserveEffectiveDateStart().plusHours(2);
+        List<SpotModel> spotsAvailable = spotRepository.findAvailableSpots(addReserveDto.reserveEffectiveDateStart(), reserveEffectiveDateEnd);
+        if (!spotsAvailable.isEmpty()){
 
-        reserveModel.setSpot(findReserve.get(0));
-        reserveModel.setReserveStatus(ReserveStatus.PENDING);
-        reserveModel.setReserveDate(LocalDate.now());
-
-        return new ShowReserveDto(reserveRepository.save(reserveModel));
-
+            reserveModel.setSpot(spotsAvailable.get(0));
+            reserveModel.setReserveStatus(ReserveStatus.PENDING);
+            reserveModel.setReserveDate(LocalDate.now());
+            reserveModel.setReserveEffectiveDateEnd(reserveEffectiveDateEnd);
+            return new ShowReserveDto(reserveRepository.save(reserveModel));
+        } else {
+            throw new InvalidReserveException("Sorry, we don't have any spot available on this hour, please try again later or with another hour!");
+        }
     }
 }

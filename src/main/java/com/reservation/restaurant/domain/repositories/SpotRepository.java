@@ -16,11 +16,10 @@ public interface SpotRepository extends JpaRepository<SpotModel, Long> {
     @Query("SELECT s FROM SpotModel s WHERE s.capacity = :capacity")
     List<SpotModel> findByCapacity(Integer capacity);
 
-    @Query("SELECT s FROM SpotModel s " +
-            "WHERE s.reserveEffectiveDate IS NULL OR " +
-            "(s.reserveEffectiveDate < :startTime OR s.reserveEffectiveDate > :endTime)")
-    List<SpotModel> findByAvailability(@Param("startTime") LocalDateTime startTime,
-                                       @Param("endTime") LocalDateTime endTime);
+    @Query("SELECT s FROM SpotModel s WHERE s.id NOT IN " +
+            "(SELECT r.spot.id FROM ReserveModel r WHERE " +
+            "(r.reserveEffectiveDateStart <= :endDate AND r.reserveEffectiveDateEnd >= :startDate))")
+    List<SpotModel> findAvailableSpots(@Param("startDate") LocalDateTime startDate, @Param("endDate") LocalDateTime endDate);
 
 
 }

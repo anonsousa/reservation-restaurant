@@ -38,23 +38,5 @@ public class ReserveValidation {
         }
     }
 
-    public List<SpotModel> findAvailableSpots(Integer capacity, LocalDateTime reservationEffectiveDate){
-        LocalDateTime reservationEffectiveDateEnd = reservationEffectiveDate.plusHours(2);
-        List<SpotModel> spots = spotRepository.findByCapacity(capacity);
-        if (spots.isEmpty()){
-            throw new InvalidReserveException("Sorry, we dont have spots available!");
-        }
-
-        List<SpotModel> availableSpots = spots.stream()
-                .filter(spot -> spotRepository.findByAvailability(reservationEffectiveDate, reservationEffectiveDateEnd)
-                        .contains(spot))
-                .collect(Collectors.toList());
-
-        if (availableSpots.isEmpty()){
-            throw new InvalidReserveException("Sorry, we dont find any table for this date/hour.");
-        }
-
-        return availableSpots;
-    }
 
 }

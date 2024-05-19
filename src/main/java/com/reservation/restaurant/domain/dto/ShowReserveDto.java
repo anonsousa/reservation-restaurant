@@ -15,7 +15,8 @@ public record ShowReserveDto(
         Integer peopleNumber,
         ReserveStatus reserveStatus,
         LocalDate reserveDate,
-        LocalDateTime reserveEffectiveDate,
+        LocalDateTime reserveEffectiveDateStart,
+        LocalDateTime reserveEffectiveDateEnd,
         String notes
 ) {
     public ShowReserveDto(ReserveModel reserveModel){
@@ -27,7 +28,8 @@ public record ShowReserveDto(
                 reserveModel.getPeopleNumber(),
                 reserveModel.getReserveStatus(),
                 reserveModel.getReserveDate(),
-                reserveModel.getReserveEffectiveDate(),
+                reserveModel.getReserveEffectiveDateStart(),
+                reserveModel.getReserveEffectiveDateEnd(),
                 reserveModel.getNotes()
         );
     }

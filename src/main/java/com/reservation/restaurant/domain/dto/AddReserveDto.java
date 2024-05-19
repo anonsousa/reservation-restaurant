@@ -1,6 +1,5 @@
 package com.reservation.restaurant.domain.dto;
 
-import com.reservation.restaurant.domain.models.ReserveModel;
 import jakarta.validation.constraints.*;
 import java.time.LocalDateTime;
 
@@ -19,6 +18,6 @@ public record AddReserveDto(
         Integer peopleNumber,
 
         @Future(message = "This field only accept future dates!")
-        LocalDateTime reserveEffectiveDate
+        LocalDateTime reserveEffectiveDateStart
         ) {
 }

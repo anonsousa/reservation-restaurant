@@ -35,8 +35,10 @@ public class ReserveModel {
     private ReserveStatus reserveStatus;
     @Column(name = "reserve_date")
     private LocalDate reserveDate;
-    @Column(name = "reserve_effective_date")
-    private LocalDateTime reserveEffectiveDate;
+    @Column(name = "reserve_effective_date_start")
+    private LocalDateTime reserveEffectiveDateStart;
+    @Column(name = "reserve_effective_date_end")
+    private LocalDateTime reserveEffectiveDateEnd;
     @Column(columnDefinition = "TEXT")
     private String notes;
 
@@ -97,19 +99,27 @@ public class ReserveModel {
         this.reserveDate = reserveDate;
     }
 
-    public LocalDateTime getReserveEffectiveDate() {
-        return reserveEffectiveDate;
-    }
-
-    public void setReserveEffectiveDate(LocalDateTime reserveEffectiveDate) {
-        this.reserveEffectiveDate = reserveEffectiveDate;
-    }
-
     public String getNotes() {
         return notes;
     }
 
     public void setNotes(String notes) {
         this.notes = notes;
+    }
+
+    public LocalDateTime getReserveEffectiveDateStart() {
+        return reserveEffectiveDateStart;
+    }
+
+    public void setReserveEffectiveDateStart(LocalDateTime reserveEffectiveDateStart) {
+        this.reserveEffectiveDateStart = reserveEffectiveDateStart;
+    }
+
+    public LocalDateTime getReserveEffectiveDateEnd() {
+        return reserveEffectiveDateEnd;
+    }
+
+    public void setReserveEffectiveDateEnd(LocalDateTime reserveEffectiveDateEnd) {
+        this.reserveEffectiveDateEnd = reserveEffectiveDateEnd;
     }
 }

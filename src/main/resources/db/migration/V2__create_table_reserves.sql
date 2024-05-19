@@ -6,7 +6,8 @@ CREATE TABLE tbl_reserves (
     people_number INTEGER NOT NULL,
     reserve_status VARCHAR(50),
     reserve_date DATE,
-    reserve_effective_date TIMESTAMP,
+    reserve_effective_date_start TIMESTAMP,
+    reserve_effective_date_end TIMESTAMP,
     notes TEXT,
     CONSTRAINT fk_spot FOREIGN KEY (spot_id) REFERENCES tbl_spots(id_table)
 );
