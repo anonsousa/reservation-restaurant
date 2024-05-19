@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class ReserveService {
@@ -31,23 +32,42 @@ public class ReserveService {
 
     @Transactional
     public ShowReserveDto save(AddReserveDto addReserveDto){
-
+        //In this part im creating a new reserveModel and adding the properties from addReserveModel to the new reserverModel
         ReserveModel reserveModel = new ReserveModel();
         BeanUtils.copyProperties(addReserveDto, reserveModel);
 
+        //In this por im validating if the reserve are allowed to be done, checking if isnt monday and tuesday and also hours too
         reserveValidation.validateReserveDate(addReserveDto.reserveEffectiveDateStart());
 
-        LocalDateTime reserveEffectiveDateEnd = addReserveDto.reserveEffectiveDateStart().plusHours(2);
-        List<SpotModel> spotsAvailable = spotRepository.findAvailableSpots(addReserveDto.reserveEffectiveDateStart(), reserveEffectiveDateEnd);
-        if (!spotsAvailable.isEmpty()){
+        //Find if we have spots available by the number of people
+        List<SpotModel> spotsAvailableByCapacity = spotRepository.findByCapacity(addReserveDto.peopleNumber());
 
-            reserveModel.setSpot(spotsAvailable.get(0));
-            reserveModel.setReserveStatus(ReserveStatus.PENDING);
-            reserveModel.setReserveDate(LocalDate.now());
-            reserveModel.setReserveEffectiveDateEnd(reserveEffectiveDateEnd);
-            return new ShowReserveDto(reserveRepository.save(reserveModel));
+        if (!spotsAvailableByCapacity.isEmpty()){
+
+            //Creating a list with the return of the method findByCapacity, only picking the ids from spots
+            List<Long> spotIds = spotsAvailableByCapacity.stream()
+                    .map(SpotModel::getIdTable)
+                    .collect(Collectors.toList());
+
+            //Business Rule, each spot only can be schedulled for 2 hours.
+            LocalDateTime reserveEffectiveDateEnd = addReserveDto.reserveEffectiveDateStart().plusHours(2);
+
+            //This query will return wich spots are available on respective hour received from the frontend user
+            List<SpotModel> spotsAvailable = spotRepository.findAvailableSpots(spotIds, addReserveDto.reserveEffectiveDateStart(), reserveEffectiveDateEnd);
+            if (!spotsAvailable.isEmpty()){
+
+                //Using the Setters for Add some necessary data
+                reserveModel.setSpot(spotsAvailable.get(0));
+                reserveModel.setReserveStatus(ReserveStatus.PENDING);
+                reserveModel.setReserveDate(LocalDate.now());
+                reserveModel.setReserveEffectiveDateEnd(reserveEffectiveDateEnd);
+
+                return new ShowReserveDto(reserveRepository.save(reserveModel));
+            } else {
+                throw new InvalidReserveException("Sorry, we don't have any spot available on this hour, please try again later or with another hour!");
+            }
         } else {
-            throw new InvalidReserveException("Sorry, we don't have any spot available on this hour, please try again later or with another hour!");
+            throw new InvalidReserveException("Sorry, we don't have any spot available for this capacity");
         }
     }
 }
